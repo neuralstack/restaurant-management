@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+    <!-- <link rel="stylesheet" href="css/all.css"> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="nav-side-menu">
+        <div class="brand brand-color">
+            <h4>Restaurant Management System</h4>
+        </div>
+        <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+        <div class="menu-list">
+            <ul id="menu-content" class="menu-content collapse out">
+                <li>
+                    <a href='/counter'>
+                        <i class="fas fa-user-tie"></i> Counter
+                    </a>
+                </li>
+                <li onClick="navigate('inventory_div')">
+                    <a>
+                        <i class="fas fa-users"></i>Raw Material Inventory
+                    </a>
+                </li>
+
+                <li data-toggle="collapse" data-target="#foods" class="collapsed">
+                    <a href="#"><i class="fas fa-utensils"></i>Food <span class="fas fa-arrow-down float-right" style="margin-right:1em; padding-top:10px;"></span></a>
+                </li>
+                <ul class="collapse" id="foods">
+                    <li onClick="navigate('food_div')" style="padding-left:2em;"><a class="fas fa-drumstick-bite"></a>
+                        All Available Foods</li>
+                    <li onClick="navigate('add_food_div')" style="padding-left:2em;"><a class="fas fa-cookie-bite"></a>
+                        Add Food</li>
+                </ul>
+
+                <li onClick="navigate('notifications_div')">
+                    <a>
+                        <i class="fa fa-users fa-lg"></i> Notification
+                        <% let count = 0; for(let i=0;i<notifications.length;i++){  if( notifications[i].flag==="unread"){ count++ ;     }}  ;  if(count>0){ %>
+                        <span class="badge badge-light">
+                            <%= count %></span>
+                        <%      } %>
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="#">
+                        <i class="far fa-chart-bar"></i> Reports
+                    </a>
+                </li>
+
+
+                <li data-toggle="collapse" data-target="#employee" class="collapsed">
+                    <a href="#"><i class="fas fa-users"></i>Employee <span class="fas fa-arrow-down float-right" style="margin-right:1em; padding-top:10px;"></span></a>
+                </li>
+                <ul class="collapse" id="employee">
+                    <li onClick="navigate('employees_div')" style="padding-left:2em;"><a class="fas fa-users"></a>
+                        Employees</li>
+                    <li onClick="navigate('add_employees_div')" style="padding-left:2em;"><a class="fas fa-user-tie"></a>
+                        Add Employees</li>
+                </ul>
+
+                <li onClick="navigate('settings_div')">
+                    <a>
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+            </ul>
+            <div class="text-center">
+                <a href="/logout" class="btn btn-warning">Logout</a>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="main">
+
+        <!---       employees_div        ------>
+        <div class="row" id="employees_div">
+            <div class="col-md-12">
+                <h3> <i class="fas fa-users"></i>Employees
+                </h3>
+
+                <hr>
+                <% mc_employees.forEach((employee)=>{ %>
+                <div class="container-fluid">
+                    <div class="container addemployee-body">
+                        <div class="container ">
+                            <div class="row card-info-section">
+                                <div class="col-sm-8">
+
+                                    <div class="row person-data">
+                                        <div class="col-4">
+                                            <p>Name</p>
+                                        </div>
+                                        <div class="col-8">
+                                            <%= employee.name %>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row person-data">
+                                        <div class="col-4">
+                                            <p>Father Name</p>
+                                        </div>
+                                        <div class="col-8">
+                                            <%= employee.father_name %>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row person-data">
+                                        <div class="col-4">
+                                            <p>Cnic No.</p>
+                                        </div>
+                                        <div class="col-8">
+                                            <%= employee.cnic %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4 photo">
+                                    <img src="<%= employee.pic %>" alt="" class="rounded image-wrapper" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+        </div>
+
+
+
+        <!----      employees_div        ----------->
+        <!---       add_employees_div        ------>
+        <div class="row" id="add_employees_div" style="display:none">
+            <div class="col-md-12">
+                <h3> <i class="fas fa-user-tie"></i> Add Employees
+                </h3>
+                <hr>
+                <form action="/admin/add_employee" method="POST" enctype="multipart/form-data">
+
+                    <div class="form-group ">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" placeholder="Enter Full Name" name="name">
+                    </div>
+                    <div class="form-group ">
+                        <label for="name">father Name:</label>
+                        <input type="text" class="form-control" placeholder="Enter Father Name" name="father_name">
+                    </div>
+                    <div class="form-group ">
+                        <label for="name">Employement Role:</label>
+                        <input type="text" class="form-control" placeholder="Enter Role in Falcon Mart" name="role">
+                    </div>
+                    <div class="form-group ">
+                        <label for="name">Address:</label>
+                        <input type="text" class="form-control" placeholder="Enter Address" name="address">
+                    </div>
+                    <div class="form-group ">
+                        <label for="name">Phone Number:</label>
+                        <input type="text" class="form-control" placeholder="Enter Phone number" name="phone">
+                    </div>
+                    <div class="form-group ">
+                        <label for="name">CNIC:</label>
+                        <input type="text" class="form-control" placeholder="Enter CNIC number" name="cnic">
+                    </div>
+                    <div class="form-group">
+                        <label for="file">Picture:</label>
+                        <input type="file" class="form-control-file" name="pic">
+                    </div>
+
+
+                    <br>
+
+                    <button class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+
+        <!----      add_employees_div        ----------->
+        <!---       Food_div        ------>
+        <div class="row" id="food_div" style="display:none">
+            <div class="col-md-12">
+                <h3> <i class="fas fa-user-tie"></i> All Food Items
+                </h3>
+                <hr>
+                <table class='table table-striped table-dark'>
+                    <thead>
+                        <tr>
+                            <th>Food Name</th>
+                            <th>Price</th>
+                            <th>Picture</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% foods.forEach((food)=>{ %>
+                        <tr>
+                            <th>
+                                <%= food.name %>
+                            </th>
+                            <td>
+                                <%= food.price %>
+                            </td>
+                            <td><img src='<%= food.pic %>' height='24px' /></td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!---       Food_div        ------>
+
+        <!---       add_food_div        ------>
+        <div class="row" id="add_food_div" style="display:none">
+            <div class="col-md-12">
+                <h3> <i class="fas fa-user-tie"></i> Add Food
+                </h3>
+                <hr>
+                <form action="/admin/add_food" method="POST" enctype="multipart/form-data">
+
+                    <div class="form-group ">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" placeholder="Enter Name of Food Item" name="name">
+                    </div>
+                    <div class="form-group ">
+                        <label for="category">Category:</label>
+                        <select class="form-control" name="category">
+                            <option value='Burger'>Burger</option>
+                            <option value='Chips'>Chips</option>
+                            <option value='Shakes'>Shakes</option>
+
+                        </select>
+                    </div>
+                    <div class="form-inline">
+                        <label class='form-control-label'>Raw Items:</label>
+                        <select class='form-control' id='raw_select'>
+                            <% inventorys.forEach((inventory)=>{ %>
+                            <option value='<%= inventory.name %>'>
+                                <%= inventory.name %> (
+                                <%= inventory.unit %>
+                                )
+                            </option>
+                            <% }) %>
+                        </select>
+                        <input type='number' class='form-control' placeholder='quantity,value acc. to product' />
+                        <button class='btn btn-primary' onClick='add_raw(this)' type='button'>+</button>
+                    </div>
+                    <div class='row'>
+                        <div id='raw_list' class='col-md-5 col-sm-8'></div>
+                        <input type='hidden' id='raw_list_input' name='raw_list_input'>
+                    </div>
+                    <script>
+                        let items_array = [];
+                        function add_raw(e) {
+                            let raw_item = e.parentNode.getElementsByTagName('select')[0].value;
+                            let quantity = e.parentNode.getElementsByTagName('input')[0].value;
+                            let obj = { item: raw_item, quantity: quantity };
+                            items_array.push(obj);
+                            let input = document.getElementById('raw_list_input');
+                            let p = document.getElementById('raw_list');
+                            let str = ``;
+                            items_array.forEach((item) => {
+                                str += `<div class="alert alert-info">
+                          `+ item.item + `&nbsp;&nbsp;&nbsp;<b style='float:right'>` + item.quantity + `</b></span>  
+                          </div>`
+                            })
+                            input.value = JSON.stringify(items_array);
+                            p.innerHTML = str;
+                        }
+                    </script>
+                    <div class="form-group ">
+                        <label for="name">Price:</label>
+                        <input type="number" class="form-control" placeholder="Enter price" name="price">
+                    </div>
+                    <div class="form-group">
+                        <label for="file">Picture:</label>
+                        <input type="file" class="form-control-file" name="pic">
+                    </div>
+
+
+                    <br>
+
+                    <button class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+
+        <!----      add_food_div        ----------->
+        <!---       Inventory_div        ------>
+        <div class="row" id="inventory_div" style="display:none">
+            <div class="col-md-12">
+                <h3> <i class="fas fa-user-tie"></i>Raw Material Inventory
+                </h3>
+                <hr>
+                <div class='border container'>
+                    <h4>Add a Raw Item</h4>
+                    <hr>
+                    <form>
+                        <div class='form-group'>
+                            <label>Name</label>
+                            <input type='text' name='name' class='form-control' placeholder='name' />
+                        </div>
+                        <div class='form-group'>
+                            <label>Unit</label>
+                            <input type='text' name='unit' class='form-control' placeholder='unit,kg,litre,dozen,ounce etc' />
+                        </div>
+                        <div class='form-group'>
+                            <label>Threshold</label>
+                            <input type='text' name='threshold' class='form-control' placeholder='Least quantity to which you will be notified' />
+                        </div>
+                        <div class='form-group'>
+                            <button class='btn btn-primary'>
+                                Add
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <hr>
+                <h4>Inventory In </h4><small>
+                    <div class='alert alert-info col-md-4 col-sm-6'>got some new raw material? add them</div>
+                </small>
+                <div>
+                    <div class='form-inline'>
+                        <label class='form-control-label'>Raw Material:</label>
+                        <select class='form-control' id='inventory_name'>
+                            <% inventorys.forEach((inventory)=>{ %>
+                            <option value='<%= inventory.name %>'>
+                                <%= inventory.name %> (
+                                <%= inventory.unit %>) </option>
+                            <%}) %>
+                        </select>
+                        <label class='form-control-label'>Inventory Add Value:</label>
+                        <input type='number' class='form-control' id='inventory_value'>
+                        <button class='btn btn-dark' onClick='add_inventory()'>Add to inventory</button>
+                    </div>
+                </div>
+                <hr>
+                <table class='table table-striped table-dark'>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Unit</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody id='inventory_table'>
+                        <% inventorys.forEach((inventory)=>{ %>
+                        <tr>
+                            <th>
+                                <%= inventory.name %>
+                            </th>
+                            <td>
+                                <%= inventory.unit %>
+                            </td>
+                            <td>
+                                <%= inventory.value %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <!---       Inventory_div        ------>
+
+
+        <!---       notifications_div        ------>
+        <div class="row" id="notifications_div" style="display:none">
+            <div class="col-md-12">
+                <h3> <i class="fa fa-users fa-lg"></i> Notification
+                </h3>
+                <hr>
+                <% notifications.forEach((notification)=>{ if(notification.flag==="unread"){ %>
+                <div class="alert alert-success alert-dismissible" id='<%= notification._id %>'>
+                    <button type="button" class="close" data-dismiss="alert" onClick='read(this.parentNode.id)'>&times;</button>
+                    <strong>
+                        <%= notification.title %></strong> <span>
+                        <% let date=  new Date(parseInt(notification.date)); %>
+                        <%= date %></span>
+                    <p>
+                        <%= notification.detail %>
+                    </p>
+                </div>
+                <% }}) %>
+                <hr>
+                <h4>OLD NOTIFICATIONS</h4>
+                <% notifications.forEach((notification)=>{ if(notification.flag!=="unread"){ %>
+                <div class="alert alert-secondary alert-dismissible" id='<%= notification._id %>'>
+                    <strong>
+                        <%= notification.title %></strong> <span>
+                        <% let date=  new Date(parseInt(notification.date)); %>
+                        <%= date %></span>
+                    <p>
+                        <%= notification.detail %>
+                    </p>
+                </div>
+                <% }}) %>
+            </div>
+        </div>
+
+        <!---       notifications_div        ------>
+
+        <!---       settings_div        ------>
+        <div class="row" id="settings_div" style="display:none">
+            <div class="col-md-12">
+                <h3> <i class="fas fa-cog"></i> Settings
+                </h3>
+                <hr>
+                <div>
+                    <div class="form-group ">
+                        <label for="email">Old Password:</label>
+                        <input type="password" class="form-control" placeholder="Enter Old Password" id="old_pwd">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">New Password:</label>
+                        <input type="password" class="form-control" placeholder="Enter New password" id="pwd">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Confirm Password:</label>
+                        <input type="password" class="form-control" placeholder="Confirm password" id="pwd_2" onChange="check_pwd()">
+                    </div>
+
+                    <br><br>
+
+                    <button disabled id='pwd_btn' class="btn btn-primary" onClick="pwd_change()">Change Password</button>
+                </div>
+            </div>
+        </div>
+
+        <!----      settings_div        ----------->
+
+
+        <div>
+</body>
+<script>
+    function check_pwd() {
+        if (document.getElementById("pwd").value !== document.getElementById("pwd_2").value) {
+            alert('password does not match');
+            document.getElementById('pwd_btn').disabled = true;
+        }
+        else {
+            document.getElementById('pwd_btn').disabled = false;
+
+        }
+    }
+    function pwd_change() {
+        let pwd_old = document.getElementById("old_pwd").value;
+        let pwd_new = document.getElementById("pwd").value;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let success = JSON.parse(this.responseText).success;
+                alert(success);
+            }
+        };
+        xhttp.open("POST", "/admin/settings", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("pwd_old=" + pwd_old + "&pwd_new=" + pwd_new);
+
+    }
+
+
+    function navigate(loc) {
+
+        document.getElementById("add_food_div").style.display = "none";
+        document.getElementById("food_div").style.display = "none";
+        document.getElementById("employees_div").style.display = "none";
+        document.getElementById("inventory_div").style.display = "none";
+        document.getElementById("add_employees_div").style.display = "none";
+        document.getElementById("settings_div").style.display = "none";
+        document.getElementById("notifications_div").style.display = "none";
+
+        document.getElementById(loc).style.display = "block"
+
+    }
+    function read(id) {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let success = JSON.parse(this.responseText).success;
+                //alert(success);
+            }
+        };
+        xhttp.open("GET", "/notifications/read/" + id, true);
+        xhttp.send();
+    }
+    function add_inventory() {
+        let name = document.getElementById('inventory_name').value, value = document.getElementById('inventory_value').value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                let inventory_name = JSON.parse(this.responseText).inventory.name;
+                let inventory_value = JSON.parse(this.responseText).inventory.value;
+
+                let table = document.getElementById('inventory_table');
+                let tr = table.getElementsByTagName('tr');
+                for (let i = 0; i < tr.length; i++) {
+                    console.log(i + ":" + tr[i].getElementsByTagName('th')[0].innerHTML);
+
+                    if (tr[i].getElementsByTagName('th')[0].innerHTML === inventory_name) {
+                        tr[i].getElementsByTagName('td')[1].innerHTML = inventory_value;
+                    }
+                }
+            }
+        };
+        xhttp.open("POST", "/admin/add_inventory", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("name=" + name + "&value=" + value);
+    }
+
+
+
+</script>
+<!-- <script src="js/bootstrap.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-3.3.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script> -->
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+
+</html>
